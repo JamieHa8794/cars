@@ -8,6 +8,15 @@ const getModels = async ()=>{
     return(await client.query('SELECT * FROM Models;')).rows;
 }
 
+const createModel = async ({name})=>{
+    return(await client.query('INSERT INTO Models(name) VALUES($1) RETURNING *', [name])).rows[0];
+}
+
+const deleteModel = async (id)=>{
+    await client.query('DELETE FROM Models WHERE id=$1', [id]);
+}
+
+
 const syncAndSeed = async()=>{
     const SQL = `
         DROP TABLE IF EXISTS Models;
@@ -46,8 +55,11 @@ const init = async ()=>{
         await client.connect();
         console.log('connected to database')
         await syncAndSeed();
-        console.log(await getBrands());
+        const murano = await createModel({name: 'Murano'});
         console.log(await getModels());
+        await deleteModel(murano.id);
+        console.log(await getModels());
+        console.log(await getBrands());
     }
     catch(err){
         console.log(err)
