@@ -2,8 +2,13 @@ const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel } = 
 const express = require('express');
 const app = express();
 
-app.get('/', (req, res, next)=>{
+app.get('/', async (req, res, next)=>{
     try{
+        const [brands, models] = await Promise.all([
+            getBrands(),
+            getModels()
+        ])
+
         const html = `
         <html>
         <head>
@@ -11,8 +16,8 @@ app.get('/', (req, res, next)=>{
                 Cars R Us - Home
             </h1>
             <nav>
-            <a href='/Brands'> Brands </a>
-            <a href='/Models'> Models </a>
+            <a href='/Brands'> Brands (${brands.length}) </a>
+            <a href='/Models'> Models (${models.length})</a>
             </nav>
         </head>
         <body>
@@ -27,8 +32,12 @@ app.get('/', (req, res, next)=>{
     }
 })
 
-app.get('/Brands', (req, res, next)=>{
+app.get('/Brands', async (req, res, next)=>{
     try{
+        const [brands, models] = await Promise.all([
+            getBrands(),
+            getModels()
+        ])
         const html = `
         <html>
         <head>
@@ -36,12 +45,21 @@ app.get('/Brands', (req, res, next)=>{
                 Cars R Us - Brands
             </h1>
             <nav>
-            <a href='/Brands'> Brands </a>
-            <a href='/Models'> Models </a>
+            <a href='/Brands'> Brands (${brands.length}) </a>
+            <a href='/Models'> Models (${models.length})</a>
             </nav>
         </head>
         <body>
-            Welcome to Cars R Us!
+            <ul>
+                ${brands.map(brand =>{
+                    return(`
+                    <li>
+                        ${brand.name}
+                    </li>
+                    `)
+                }).join('')
+                }
+            </ul>
         </body>
         </html>
         `
@@ -52,8 +70,12 @@ app.get('/Brands', (req, res, next)=>{
     }
 })
 
-app.get('/Models', (req, res, next)=>{
+app.get('/Models', async (req, res, next)=>{
     try{
+        const [brands, models] = await Promise.all([
+            getBrands(),
+            getModels()
+        ])
         const html = `
         <html>
         <head>
@@ -61,12 +83,21 @@ app.get('/Models', (req, res, next)=>{
                 Cars R Us - Models
             </h1>
             <nav>
-            <a href='/Brands'> Brands </a>
-            <a href='/Models'> Models </a>
+            <a href='/Brands'> Brands (${brands.length}) </a>
+            <a href='/Models'> Models (${models.length})</a>
             </nav>
         </head>
         <body>
-            Welcome to Cars R Us!
+            <ul>
+                ${models.map(model =>{
+                    return(`
+                    <li>
+                        ${model.name}
+                    </li>
+                    `)
+                }).join('')
+            }
+            </ul>
         </body>
         </html>
         `
