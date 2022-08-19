@@ -2,6 +2,80 @@ const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel } = 
 const express = require('express');
 const app = express();
 
+app.get('/', (req, res, next)=>{
+    try{
+        const html = `
+        <html>
+        <head>
+            <h1>    
+                Cars R Us - Home
+            </h1>
+            <nav>
+            <a href='/Brands'> Brands </a>
+            <a href='/Models'> Models </a>
+            </nav>
+        </head>
+        <body>
+            Welcome to Cars R Us!
+        </body>
+        </html>
+        `
+        res.send(html)
+    }
+    catch(err){
+        next(err)
+    }
+})
+
+app.get('/Brands', (req, res, next)=>{
+    try{
+        const html = `
+        <html>
+        <head>
+            <h1>    
+                Cars R Us - Brands
+            </h1>
+            <nav>
+            <a href='/Brands'> Brands </a>
+            <a href='/Models'> Models </a>
+            </nav>
+        </head>
+        <body>
+            Welcome to Cars R Us!
+        </body>
+        </html>
+        `
+        res.send(html)
+    }
+    catch(err){
+        next(err)
+    }
+})
+
+app.get('/Models', (req, res, next)=>{
+    try{
+        const html = `
+        <html>
+        <head>
+            <h1>    
+                Cars R Us - Models
+            </h1>
+            <nav>
+            <a href='/Brands'> Brands </a>
+            <a href='/Models'> Models </a>
+            </nav>
+        </head>
+        <body>
+            Welcome to Cars R Us!
+        </body>
+        </html>
+        `
+        res.send(html)
+    }
+    catch(err){
+        next(err)
+    }
+})
 
 const init = async ()=>{
     try{
