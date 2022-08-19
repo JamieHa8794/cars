@@ -2,23 +2,28 @@ const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel } = 
 const express = require('express');
 const app = express();
 
+const nav = ({brands, models}) =>{
+    return(`
+    <nav>
+    <a href='/Brands'> Brands (${brands.length}) </a>
+    <a href='/Models'> Models (${models.length})</a>
+    </nav>
+    `)
+}
+
 app.get('/', async (req, res, next)=>{
     try{
         const [brands, models] = await Promise.all([
             getBrands(),
             getModels()
         ])
-
         const html = `
         <html>
         <head>
             <h1>    
                 Cars R Us - Home
             </h1>
-            <nav>
-            <a href='/Brands'> Brands (${brands.length}) </a>
-            <a href='/Models'> Models (${models.length})</a>
-            </nav>
+            ${nav({brands, models})}
         </head>
         <body>
             Welcome to Cars R Us!
@@ -44,10 +49,7 @@ app.get('/Brands', async (req, res, next)=>{
             <h1>    
                 Cars R Us - Brands
             </h1>
-            <nav>
-            <a href='/Brands'> Brands (${brands.length}) </a>
-            <a href='/Models'> Models (${models.length})</a>
-            </nav>
+            ${nav({brands, models})}
         </head>
         <body>
             <ul>
@@ -78,14 +80,10 @@ app.get('/Models', async (req, res, next)=>{
         ])
         const html = `
         <html>
-        <head>
             <h1>    
                 Cars R Us - Models
             </h1>
-            <nav>
-            <a href='/Brands'> Brands (${brands.length}) </a>
-            <a href='/Models'> Models (${models.length})</a>
-            </nav>
+            ${nav({brands, models})}
         </head>
         <body>
             <ul>
@@ -113,12 +111,6 @@ const init = async ()=>{
         await client.connect();
         console.log('connected to database')
         await syncAndSeed();
-        const murano = await createModel({name: 'Murano'});
-        console.log(await getModels());
-        await deleteModel(murano.id);
-        console.log(await getModels());
-        console.log(await getBrands());
-
         const port = process.env.PORT || 3000;
         app.listen(port, ()=> console.log(`listening on port ${port}`))
     }
