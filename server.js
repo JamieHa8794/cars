@@ -1,6 +1,10 @@
 const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel } = require('./db');
 const express = require('express');
 const app = express();
+const path = require('path')
+
+app.use('/public', express.static(path.join(__dirname, 'public')))
+
 
 const nav = ({brands, models}) =>{
     return(`
@@ -20,6 +24,7 @@ app.get('/', async (req, res, next)=>{
         const html = `
         <html>
         <head>
+        <link rel='stylesheet' href='/public/styles.css'/>
             <h1>    
                 Cars R Us - Home
             </h1>
