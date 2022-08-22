@@ -1,4 +1,19 @@
 body{
     font-family: fantasy;
-    background-color: aquamarine;
+    background-color: whitesmoke;
+}
+li{
+    list-style: none;
+    padding: 50px;
+}
+ul{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+nav{
+    background-color: lightgrey;
+    display: flex;
+    justify-content: space-around;
 }

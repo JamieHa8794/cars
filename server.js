@@ -9,12 +9,26 @@ app.use('/public', express.static(path.join(__dirname, 'public')))
 const nav = ({brands, models}) =>{
     return(`
     <nav>
+    <a href='/'>Home</a>
     <a href='/Brands'> Brands (${brands.length}) </a>
     <a href='/Models'> Models (${models.length})</a>
     </nav>
     `)
 }
 
+const head = ({ title }) =>{
+    return(`
+    <head>
+        <link rel='stylesheet' href='/public/styles.css'/>
+        <h1>
+            Cars R Us - ${ title }
+        </h1>
+        <title>
+            ${ title }
+        </title>
+    </head>
+    `)
+}
 app.get('/', async (req, res, next)=>{
     try{
         const [brands, models] = await Promise.all([
@@ -23,13 +37,8 @@ app.get('/', async (req, res, next)=>{
         ])
         const html = `
         <html>
-        <head>
-        <link rel='stylesheet' href='/public/styles.css'/>
-            <h1>    
-                Cars R Us - Home
-            </h1>
+            ${head({title: 'Home'})}
             ${nav({brands, models})}
-        </head>
         <body>
             Welcome to Cars R Us!
         </body>
@@ -50,12 +59,8 @@ app.get('/Brands', async (req, res, next)=>{
         ])
         const html = `
         <html>
-        <head>
-            <h1>    
-                Cars R Us - Brands
-            </h1>
+            ${head({title: 'Brands'})}
             ${nav({brands, models})}
-        </head>
         <body>
             <ul>
                 ${brands.map(brand =>{
@@ -85,11 +90,8 @@ app.get('/Models', async (req, res, next)=>{
         ])
         const html = `
         <html>
-            <h1>    
-                Cars R Us - Models
-            </h1>
+            ${head({title: 'Models'})}
             ${nav({brands, models})}
-        </head>
         <body>
             <ul>
                 ${models.map(model =>{
