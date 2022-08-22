@@ -4,6 +4,9 @@ const client = new Client(process.env.DATABASE_URL || 'postgress://localhost/car
 const getBrands = async ()=>{
     return(await client.query('SELECT * FROM Brands;')).rows;
 }
+const createBrand = async ({name})=>{
+    return(await client.query('INSERT INTO Brands(name) VALUES($1) RETURNING *', [name])).rows[0];
+}
 const getModels = async ()=>{
     return(await client.query('SELECT * FROM Models;')).rows;
 }
@@ -52,6 +55,7 @@ const syncAndSeed = async()=>{
 module.exports = {
     client, 
     getBrands,
+    createBrand,
     getModels,
     createModel,
     deleteModel,

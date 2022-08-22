@@ -1,10 +1,10 @@
-const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel } = require('./db');
+const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel, createBrand } = require('./db');
 const express = require('express');
 const app = express();
 const path = require('path')
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
-
+app.use(express.urlencoded({extended: false}))
 
 const nav = ({brands, models}) =>{
     return(`
@@ -62,6 +62,10 @@ app.get('/Brands', async (req, res, next)=>{
             ${head({title: 'Brands'})}
             ${nav({brands, models})}
         <body>
+            <form method='POST'>
+            <input name ='name'/>
+            <button> Add </button>
+            </form>
             <ul>
                 ${brands.map(brand =>{
                     return(`
@@ -82,6 +86,17 @@ app.get('/Brands', async (req, res, next)=>{
     }
 })
 
+app.post('/Brands', async (req, res, next)=>{
+    try{
+        await createBrand(req.body)
+        res.redirect('/Brands')
+    }
+    catch(err){
+        next(err);
+    }
+})
+
+
 app.get('/Models', async (req, res, next)=>{
     try{
         const [brands, models] = await Promise.all([
@@ -93,6 +108,10 @@ app.get('/Models', async (req, res, next)=>{
             ${head({title: 'Models'})}
             ${nav({brands, models})}
         <body>
+            <form method='POST'>
+                <input name ='name'/>
+                <button> Add </button>
+            </form>
             <ul>
                 ${models.map(model =>{
                     return(`
@@ -113,6 +132,15 @@ app.get('/Models', async (req, res, next)=>{
     }
 })
 
+app.post('/Models', async (req, res, next)=>{
+    try{
+        await createModel(req.body)
+        res.redirect('/Models')
+    }
+    catch(err){
+        next(err);
+    }
+})
 const init = async ()=>{
     try{
         await client.connect();

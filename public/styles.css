@@ -1,6 +1,7 @@
 body{
     font-family: fantasy;
     background-color: whitesmoke;
+    padding: 10px;
 }
 li{
     list-style: none;
@@ -16,4 +17,7 @@ nav{
     background-color: lightgrey;
     display: flex;
     justify-content: space-around;
+}
+form{
+    padding-top: 20px;
 }
