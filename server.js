@@ -1,4 +1,5 @@
 const { client, syncAndSeed, getBrands, getModels, createModel, createBrand , deleteModel, deleteBrand} = require('./db');
+const {head, nav } = require('./templates')
 const express = require('express');
 const app = express();
 const path = require('path')
@@ -7,30 +8,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({extended: false}))
 app.use(require('method-override')('_method'));
 
-
-const nav = ({brands, models}) =>{
-    return(`
-    <nav>
-    <a href='/'>Home</a>
-    <a href='/Brands'> Brands (${brands.length}) </a>
-    <a href='/Models'> Models (${models.length})</a>
-    </nav>
-    `)
-}
-
-const head = ({ title }) =>{
-    return(`
-    <head>
-        <link rel='stylesheet' href='/public/styles.css'/>
-        <h1>
-            Cars R Us - ${ title }
-        </h1>
-        <title>
-            ${ title }
-        </title>
-    </head>
-    `)
-}
 app.get('/', async (req, res, next)=>{
     try{
         const [brands, models] = await Promise.all([
@@ -53,108 +30,11 @@ app.get('/', async (req, res, next)=>{
     }
 })
 
-app.get('/Brands', async (req, res, next)=>{
-    try{
-        const [brands, models] = await Promise.all([
-            getBrands(),
-            getModels()
-        ])
-        const html = `
-        <html>
-            ${head({title: 'Brands'})}
-            ${nav({brands, models})}
-        <body>
-            <form method='POST'>
-            <input name ='name'/>
-            <button> Add </button>
-            </form>
-            <ul>
-                ${brands.map(brand =>{
-                    return(`
-                    <li>
-                        ${brand.name}
-                        <form method='POST' action='/brands/${brand.id}?_method=DELETE'}>
-                        <button>x</button>
-                        </form>
-                    </li>
-                    `)
-                }).join('')
-                }
-            </ul>
-        </body>
-        </html>
-        `
-        res.send(html)
-    }
-    catch(err){
-        next(err)
-    }
-})
+app.use('/brands', require('./routes/brands'))
 
-app.post('/Brands', async (req, res, next)=>{
-    try{
-        await createBrand(req.body)
-        res.redirect('/Brands')
-    }
-    catch(err){
-        next(err);
-    }
-})
+app.use('/models', require('./routes/models'))
 
-app.delete('/Brands/:id', async (req, res, next)=>{
-    try{
-        await deleteBrand(req.params.id)
-        res.redirect('/Brands')
-    }
-    catch(err){
-        next(err);
-    }
-})
 
-app.get('/Models', async (req, res, next)=>{
-    try{
-        const [brands, models] = await Promise.all([
-            getBrands(),
-            getModels()
-        ])
-        const html = `
-        <html>
-            ${head({title: 'Models'})}
-            ${nav({brands, models})}
-        <body>
-            <form method='POST'>
-                <input name ='name'/>
-                <button> Add </button>
-            </form>
-            <ul>
-                ${models.map(model =>{
-                    return(`
-                    <li>
-                        ${model.name}
-                    </li>
-                    `)
-                }).join('')
-            }
-            </ul>
-        </body>
-        </html>
-        `
-        res.send(html)
-    }
-    catch(err){
-        next(err)
-    }
-})
-
-app.post('/Models', async (req, res, next)=>{
-    try{
-        await createModel(req.body)
-        res.redirect('/Models')
-    }
-    catch(err){
-        next(err);
-    }
-})
 const init = async ()=>{
     try{
         await client.connect();

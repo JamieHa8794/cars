@@ -28,7 +28,13 @@ nav{
     background-color: lightgrey;
     display: flex;
     justify-content: space-around;
+    border-top: black dotted;
+    border-bottom: black dotted;
 }
 form{
     padding-top: 20px;
+}
+
+nav > a{
+    color: black;
 }
