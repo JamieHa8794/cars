@@ -1,10 +1,12 @@
-const { client, syncAndSeed, getBrands, getModels, createModel, deleteModel, createBrand } = require('./db');
+const { client, syncAndSeed, getBrands, getModels, createModel, createBrand , deleteModel, deleteBrand} = require('./db');
 const express = require('express');
 const app = express();
 const path = require('path')
 
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({extended: false}))
+app.use(require('method-override')('_method'));
+
 
 const nav = ({brands, models}) =>{
     return(`
@@ -71,6 +73,9 @@ app.get('/Brands', async (req, res, next)=>{
                     return(`
                     <li>
                         ${brand.name}
+                        <form method='POST' action='/brands/${brand.id}?_method=DELETE'}>
+                        <button>x</button>
+                        </form>
                     </li>
                     `)
                 }).join('')
@@ -96,6 +101,15 @@ app.post('/Brands', async (req, res, next)=>{
     }
 })
 
+app.delete('/Brands/:id', async (req, res, next)=>{
+    try{
+        await deleteBrand(req.params.id)
+        res.redirect('/Brands')
+    }
+    catch(err){
+        next(err);
+    }
+})
 
 app.get('/Models', async (req, res, next)=>{
     try{

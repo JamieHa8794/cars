@@ -6,11 +6,22 @@ body{
 li{
     list-style: none;
     padding: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
+li > form > button{
+    margin: 10px;
+}
+li > form {
+    padding-top: 10px;
+}
+
 ul{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    padding-left: 0px;
 }
 
 nav{

@@ -7,6 +7,9 @@ const getBrands = async ()=>{
 const createBrand = async ({name})=>{
     return(await client.query('INSERT INTO Brands(name) VALUES($1) RETURNING *', [name])).rows[0];
 }
+const deleteBrand = async (id)=>{
+    await client.query('DELETE FROM Brands WHERE id=$1', [id]);
+}
 const getModels = async ()=>{
     return(await client.query('SELECT * FROM Models;')).rows;
 }
@@ -56,6 +59,7 @@ module.exports = {
     client, 
     getBrands,
     createBrand,
+    deleteBrand,
     getModels,
     createModel,
     deleteModel,
